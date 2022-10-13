@@ -10,7 +10,7 @@ File fractal.go containt b/w fractal generation code.
 ![Fractal](https://github.com/klimenkoOleg/golang_crypto/blob/main/resources/fractal.png?raw=true)
 
 
-Drawing 3D surface in Go
+# Drawing 3D surface in Go
 
 ![Fractal](https://github.com/klimenkoOleg/golang_crypto/blob/main/resources/surface.svg?raw=true)
 
