@@ -6,6 +6,10 @@ Various examples for GO learning
 
 # Generating fractal images
 
+Colored fractal
+
+![Fractal](https://github.com/klimenkoOleg/golang_crypto/blob/main/resources/fractal_colored.png?raw=true)
+
 File fractal.go containt b/w fractal generation code.
 
 ![Fractal](https://github.com/klimenkoOleg/golang_crypto/blob/main/resources/fractal.png?raw=true)
