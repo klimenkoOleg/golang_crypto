@@ -14,11 +14,11 @@ import (
 	"log"
 )
 
+// go get github.com/ecies/go/v2
 func main() {
 	hasher := sha1.New()
 	str := "asd"
 	hasher.Write([]byte(str))
-	//sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 	sha := hex.EncodeToString(hasher.Sum(nil))
 
 	fmt.Println("sha: " + sha)
@@ -52,7 +52,7 @@ func elliptic() {
 	fmt.Println(hex.EncodeToString(k.PublicKey.Bytes(false)))
 	//hex.EncodeToString(k.)
 
-	plaintext := []byte("Hello Blockchain!")
+	plaintext := []byte("Hello Cryptogtaphy!")
 
 	ciphertext, err := ecies.Encrypt(k.PublicKey, []byte("Hello Blockchain!"))
 	if err != nil {
@@ -133,7 +133,7 @@ func decryptAes() string {
 	return hex.EncodeToString(out)
 }
 
-//48656c6c6f20426c6f636b636861696e210f0f0f0f0f0f0f0f0f0f0f0f0f0f0f
+// 48656c6c6f20426c6f636b636861696e210f0f0f0f0f0f0f0f0f0f0f0f0f0f0f
 // result: 48656c6c6f20426c6f636b636861696e21
 func DecryptCbc(aes cipher.Block, encrypted []byte, iv []byte) ([]byte, error) {
 	//aescipher, _ := aes.NewCipher([]byte(util.Md5sum(key)))

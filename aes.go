@@ -1,84 +1,42 @@
 package main
 
 import (
-        "crypto/aes"
-        "encoding/hex"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
+	"fmt"
+	"io"
+	"os"
 )
-
-type ECIESParams struct {
-	Hash      func() hash.Hash // hash function
-	hashAlgo  crypto.Hash
-	Cipher    func([]byte) (cipher.Block, error) // symmetric cipher
-	BlockSize int                                // block size of symmetric cipher
-	KeyLen    int                                // length of symmetric key
-}
-
-var (
-	ECIES_AES128_SHA256 = &ECIESParams{
-		Hash:      sha256.New,
-		hashAlgo:  crypto.SHA256,
-		Cipher:    aes.NewCipher,
-		BlockSize: aes.BlockSize,
-		KeyLen:    16,
-	}
-
-	ECIES_AES192_SHA384 = &ECIESParams{
-		Hash:      sha512.New384,
-		hashAlgo:  crypto.SHA384,
-		Cipher:    aes.NewCipher,
-		BlockSize: aes.BlockSize,
-		KeyLen:    24,
-	}
-
-	ECIES_AES256_SHA256 = &ECIESParams{
-		Hash:      sha256.New,
-		hashAlgo:  crypto.SHA256,
-		Cipher:    aes.NewCipher,
-		BlockSize: aes.BlockSize,
-		KeyLen:    32,
-	}
-
-	ECIES_AES256_SHA384 = &ECIESParams{
-		Hash:      sha512.New384,
-		hashAlgo:  crypto.SHA384,
-		Cipher:    aes.NewCipher,
-		BlockSize: aes.BlockSize,
-		KeyLen:    32,
-	}
-
-	ECIES_AES256_SHA512 = &ECIESParams{
-		Hash:      sha512.New,
-		hashAlgo:  crypto.SHA512,
-		Cipher:    aes.NewCipher,
-		BlockSize: aes.BlockSize,
-		KeyLen:    32,
-	}
-)
-
-var keys [3][]byte = {
-    []byte("asuperstrong32bitpasswordgohere!") //32 bit key for AES-256
-	[]byte("asuperstrong24bitpasswor") //24 bit key for AES-192
-	[]byte("asuperstrong16bi") //16 bit key for AES-128
-}
-
 
 func main() {
+
+	// 32 bit key for AES-256
+	// 24 bit key for AES-192
+	// 16 bit key for AES-128
+	keys1 := [3][]byte{
+		[]byte("asuperstrong32bitpasswordgohere!"),
+		[]byte("asuperstrong24bitpasswor"),
+		[]byte("asuperstrong16bi")}
+
 	message := os.Args[1]
 
-    for i := range 0..2 {
-        cipherKey := keys[i]
-        //Encrypt the text:
-        encrypted, err := encrypt(cipherKey, message)
-        CheckError(err)
-        //Print the key and cipher text:
-        fmt.Printf("\n\tCIPHER KEY: %s\n", string(cipherKey))
-        fmt.Printf("\tENCRYPTED: %s\n", encrypted)
-        //Decrypt the text:
-        decrypted, err := decrypt(cipherKey, encrypted)
-        CheckError(err)
-        //Print re-decrypted text:
-	    fmt.Printf("\tDECRYPTED: %s\n\n", decrypted)
-    }
+	for i := 0; i < len(keys1); i++ {
+		cipherKey := keys1[i]
+		//Encrypt the text:
+		encrypted, err := encrypt(cipherKey, message)
+		checkError(err)
+		//Print the key and cipher text:
+		fmt.Printf("\n\tCIPHER KEY: %s\n", string(cipherKey))
+		fmt.Printf("\tENCRYPTED: %s\n", encrypted)
+		//Decrypt the text:
+		decrypted, err := decrypt(cipherKey, encrypted)
+		checkError(err)
+		//Print re-decrypted text:
+		fmt.Printf("\tDECRYPTED: %s\n\n", decrypted)
+	}
 
 }
 
@@ -118,7 +76,7 @@ func encrypt(key []byte, message string) (encoded string, err error) {
 
 	//Encrypt the data
 	// CFB (short for cipher feedback) is an AES block cipher mode similar to
-    // the CBC mode in the sense that for the encryption of a block
+	// the CBC mode in the sense that for the encryption of a block
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(cipherText[aes.BlockSize:], plainText)
 
@@ -172,3 +130,8 @@ func decrypt(key []byte, secure string) (decoded string, err error) {
 	return string(cipherText), err
 }
 
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
