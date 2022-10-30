@@ -180,30 +180,6 @@ func DecryptMessage(key []byte, message string) (string, error) {
 	return string(cipherText), nil
 }
 
-/*
-func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
-	if blockSize < 1 {
-		return nil, fmt.Errorf("Block size looks wrong")
-	}
-
-	if len(data)%blockSize != 0 {
-		return nil, fmt.Errorf("Data isn't aligned to blockSize")
-	}
-
-	if len(data) == 0 {
-		return nil, fmt.Errorf("Data is empty")
-	}
-
-	paddingLength := int(data[len(data)-1])
-	for _, el := range data[len(data)-paddingLength:] {
-		if el != byte(paddingLength) {
-			return nil, fmt.Errorf("Padding had malformed entries. Have '%x', expected '%x'", paddingLength, el)
-		}
-	}
-
-	return data[:len(data)-paddingLength], nil
-}*/
-
 // PKCS7Unpad removes PKCS7 padding from the data block, http://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7
 // this function may return an error id padding is incorrect,
 // however it will return unpadded data in any case
