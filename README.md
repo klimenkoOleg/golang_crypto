@@ -1,8 +1,6 @@
 # golang_crypto
 
 
-
-
 Various examples for GO learning
 
 
