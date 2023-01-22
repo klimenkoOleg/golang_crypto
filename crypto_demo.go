@@ -16,7 +16,7 @@ import (
 
 // go get github.com/ecies/go/v2
 func main() {
-	/*hasher := sha1.New()
+	hasher := sha1.New()
 	str := "asd"
 	hasher.Write([]byte(str))
 	sha := hex.EncodeToString(hasher.Sum(nil))
@@ -38,37 +38,37 @@ func main() {
 	fmt.Println(msg)
 
 	fmt.Println(decryptAes())
-	*/
-	_elliptic()
+
+	elliptic()
 }
 
-func _elliptic() {
-	// generate a private key
-	k, err := ecies.GenerateKey()
+func elliptic() {
+	// generate provate key
+	k, err :=
 	if err != nil {
 		panic(err)
 	}
 	log.Println("key pair has been generated")
 	fmt.Println("Public key: ")
 	// extract Public key from Private key
-	fmt.Println(hex.EncodeToString(k.PublicKey.Bytes(false)))
-	// Set up a message to encrypt
+	fmt.Println(hex.EncodeToString( ... ))
+	// setup a message to encrypt
 	plaintext := []byte("Hello Cryptogtaphy!")
 	// encrypt with public key
-	ciphertext, err := ecies.Encrypt(k.PublicKey, []byte("Hello Blockchain!"))
+	ciphertext, err :=
 	if err != nil {
 		panic(err)
 	}
 	log.Printf("plaintext encrypted: %v\n", ciphertext)
 	// decrypt with private key
-	plaintext, err = ecies.Decrypt(k, ciphertext)
+	plaintext, err =
 	if err != nil {
 		panic(err)
 	}
 	log.Printf("ciphertext decrypted: %s\n", string(plaintext))
 }
 
-func _haxStr2bytes(str string) []byte {
+func haxStr2bytes(str string) []byte {
 	data, err := hex.DecodeString(str)
 	if err != nil {
 		panic(err)
@@ -76,7 +76,7 @@ func _haxStr2bytes(str string) []byte {
 	return data
 }
 
-func _sha1b(str string) string {
+func sha1b(str string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(str))
 	//sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
@@ -84,12 +84,12 @@ func _sha1b(str string) string {
 	return sha
 }
 
-func _sha256b(data []byte) []byte {
+func sha256b(data []byte) []byte {
 	hash := sha256.Sum256([]byte(data))
 	return hash[:]
 }
 
-func _encryptMessage(key []byte, message string) (string, error) {
+func EncryptMessage(key []byte, message string) (string, error) {
 	byteMsg := []byte(message)
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -111,9 +111,8 @@ func _encryptMessage(key []byte, message string) (string, error) {
 	return resultHex, err
 }
 
-/*
 // data []byte, key []byte, initVector []byte
-func _decryptAes() string {
+func decryptAes() string {
 	key := haxStr2bytes("54684020247570407220244063724074")
 	aes, err := aes.NewCipher(key)
 	if err != nil {
@@ -137,7 +136,7 @@ func _decryptAes() string {
 
 // 48656c6c6f20426c6f636b636861696e210f0f0f0f0f0f0f0f0f0f0f0f0f0f0f
 // result: 48656c6c6f20426c6f636b636861696e21
-func _decryptCbc(aes cipher.Block, encrypted []byte, iv []byte) ([]byte, error) {
+func DecryptCbc(aes cipher.Block, encrypted []byte, iv []byte) ([]byte, error) {
 	//aescipher, _ := aes.NewCipher([]byte(util.Md5sum(key)))
 
 	decryptor := cipher.NewCBCDecrypter(aes, iv)
@@ -158,7 +157,7 @@ func _decryptCbc(aes cipher.Block, encrypted []byte, iv []byte) ([]byte, error) 
 	return decryptedBytes[:len(decryptedBytes)], nil
 }
 
-func _decryptMessage(key []byte, message string) (string, error) {
+func DecryptMessage(key []byte, message string) (string, error) {
 	cipherText, err := base64.StdEncoding.DecodeString(message)
 	if err != nil {
 		return "", fmt.Errorf("could not base64 decode: %v", err)
@@ -185,7 +184,7 @@ func _decryptMessage(key []byte, message string) (string, error) {
 // PKCS7Unpad removes PKCS7 padding from the data block, http://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7
 // this function may return an error id padding is incorrect,
 // however it will return unpadded data in any case
-func _PKCS7Unpad2(padded []byte) (message []byte, err error) {
+func PKCS7Unpad2(padded []byte) (message []byte, err error) {
 	// read padding length
 	plen := len(padded)
 	last_byte := padded[plen-1]
@@ -202,4 +201,3 @@ func _PKCS7Unpad2(padded []byte) (message []byte, err error) {
 	// remove padding
 	return padded[:plen-padlen], err
 }
-*/

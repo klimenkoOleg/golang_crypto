@@ -13,9 +13,9 @@ import (
 
 func main() {
 
-	// 32 bit key for AES-256
-	// 24 bit key for AES-192
-	// 16 bit key for AES-128
+	// 32 byte key for AES-256
+	// 24 byte key for AES-192
+	// 16 byte key for AES-128
 	keys1 := [3][]byte{
 		[]byte("asuperstrong32bitpasswordgohere!"),
 		[]byte("asuperstrong24bitpasswor"),
@@ -26,13 +26,13 @@ func main() {
 	for i := 0; i < len(keys1); i++ {
 		cipherKey := keys1[i]
 		//Encrypt the text:
-		encrypted, err := encrypt2(cipherKey, message)
+		encrypted, err := encrypt(cipherKey, message)
 		checkError(err)
 		//Print the key and cipher text:
 		fmt.Printf("\n\tCIPHER KEY: %s\n", string(cipherKey))
 		fmt.Printf("\tENCRYPTED: %s\n", encrypted)
 		//Decrypt the text:
-		decrypted, err := decrypt2(cipherKey, encrypted)
+		decrypted, err := decrypt(cipherKey, encrypted)
 		checkError(err)
 		//Print re-decrypted text:
 		fmt.Printf("\tDECRYPTED: %s\n\n", decrypted)
@@ -53,7 +53,7 @@ func main() {
  *		string encoded	: String containing the encoded user input
  *		error err	: Error message
  */
-func encrypt2(key []byte, message string) (encoded string, err error) {
+func encrypt(key []byte, message string) (encoded string, err error) {
 	//Create byte array from the input string
 	plainText := []byte(message)
 
@@ -68,8 +68,9 @@ func encrypt2(key []byte, message string) (encoded string, err error) {
 	//Make the cipher text a byte array of size BlockSize + the length of the message
 	cipherText := make([]byte, aes.BlockSize+len(plainText))
 
-	//iv is the ciphertext up to the blocksize (16)
+	//iv is the ciphertext up to the blocksize (16) - initialization vector
 	iv := cipherText[:aes.BlockSize]
+
 	if _, err = io.ReadFull(rand.Reader, iv); err != nil {
 		return
 	}
@@ -97,7 +98,7 @@ func encrypt2(key []byte, message string) (encoded string, err error) {
  *		string decoded	: String containing the decrypted equivalent of secure
  *		error err	: Error message
  */
-func decrypt2(key []byte, secure string) (decoded string, err error) {
+func decrypt(key []byte, secure string) (decoded string, err error) {
 	//Remove base64 encoding:
 	cipherText, err := base64.RawStdEncoding.DecodeString(secure)
 
@@ -130,7 +131,7 @@ func decrypt2(key []byte, secure string) (decoded string, err error) {
 	return string(cipherText), err
 }
 
-func checkError2(err error) {
+func checkError(err error) {
 	if err != nil {
 		panic(err)
 	}
