@@ -3,8 +3,10 @@
 
 
 
-Various examples for GO learning
 
+
+
+Various examples for GO learning
 
 
 # Generating fractal images
