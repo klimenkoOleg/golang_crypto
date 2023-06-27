@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -9,12 +10,62 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	ecies "github.com/ecies/go/v2"
+	ecies "github.com/ecies/go/v2" // use: go get github.com/ecies/go/v2
+	//"github.com/ethereum/crypto"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 	"io"
 	"log"
+	"testing"
 )
 
+//go get -d github.com/ethereum/go-ethereum/...
+
+func TestKeccak256Hasher(t *testing.T) {
+	msg := []byte("abc")
+	exp, _ := hex.DecodeString("4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45")
+	hasher := crypto.NewKeccakState()
+	checkhash(t, "Sha3-256-array", func(in []byte) []byte { h := HashData(hasher, in); return h[:] }, msg, exp)
+
+	common.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef")
+}
+
+// HashData hashes the provided data using the KeccakState and returns a 32 byte hash
+func HashData(kh crypto.KeccakState, data []byte) (h common.Hash) {
+	kh.Reset()
+	kh.Write(data)
+	kh.Read(h[:])
+	return h
+}
+
+func checkhash(t *testing.T, name string, f func([]byte) []byte, msg, exp []byte) {
+	sum := f(msg)
+	if !bytes.Equal(exp, sum) {
+		t.Fatalf("hash %s mismatch: want: %x have: %x", name, exp, sum)
+	}
+}
+
+func sha1_hash(msg string) {
+	hasher := sha1.New()
+	hasher.Write([]byte(msg))
+	sha := hex.EncodeToString(hasher.Sum(nil))
+	fmt.Println("sha: " + sha)
+	fmt.Printf("% x \n", hasher.Sum(nil))
+}
+
+func sha1_hash(msg string) {
+	hasher := sha1.New()
+	hasher.Write([]byte(msg))
+	sha := hex.EncodeToString(hasher.Sum(nil))
+	fmt.Println("sha: " + sha)
+	fmt.Printf("% x \n", hasher.Sum(nil))
+}
+
 func main() {
+	calc_hash("test")
+}
+
+/*
 	hasher := sha1.New()
 	str := "asd"
 	hasher.Write([]byte(str))
@@ -40,7 +91,7 @@ func main() {
 	fmt.Println(decryptAes())
 
 	elliptic()
-}
+}*/
 
 func elliptic() {
 	k, err := ecies.GenerateKey()
