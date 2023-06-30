@@ -9,7 +9,7 @@ type MyCircularQueue struct {
 	len   int
 }
 
-func Constructor(k int) MyCircularQueue {
+func NewMyCircularQueue(k int) MyCircularQueue {
 	return MyCircularQueue{make([]int, k), -1, -1, 0}
 }
 
@@ -69,8 +69,45 @@ func (this *MyCircularQueue) IsFull() bool {
 	return this.len == len(this.queue)
 }
 
+type MovingAverage struct {
+	MyCircularQueue
+}
+
+func Constructor(size int) MovingAverage {
+	return MovingAverage{NewMyCircularQueue(size)}
+}
+
+func (this *MovingAverage) Next(val int) float64 {
+	if this.len >= len(this.queue) {
+		this.DeQueue()
+	}
+	this.EnQueue(val)
+	avg := 0.0
+	for i, idx := 0, this.head; i < this.len; i, idx = i+1, idx+1 {
+		if idx == this.len {
+			idx = 0
+		}
+		avg += float64(this.queue[idx])
+
+	}
+	avg /= float64(this.len)
+	return avg
+}
+
 func main() {
-	myCircularQueue := Constructor(3)
+	//movingAverage := Constructor(3)
+	movingAverage := Constructor(1)
+
+	fmt.Println(movingAverage.Next(4)) // return 1.0 = 1 / 1
+	fmt.Println(movingAverage.Next(0)) // return 1.0 = 1 / 1
+	//fmt.Println(movingAverage.Next(1)) // return 1.0 = 1 / 1
+
+	//fmt.Println(movingAverage.Next(1))  // return 1.0 = 1 / 1
+	//fmt.Println(movingAverage.Next(10)) // return 5.5 = (1 + 10) / 2
+	//fmt.Println(movingAverage.Next(3))  // return 4.66667 = (1 + 10 + 3) / 3
+	//fmt.Println(movingAverage.Next(5))  // return 6.0 = (10 + 3 + 5) / 3
+
+	/*myCircularQueue := NewMyCircularQueue(3)
 	fmt.Println(myCircularQueue.EnQueue(1)) // return True
 	fmt.Println(myCircularQueue.EnQueue(2)) // return True
 	fmt.Println(myCircularQueue.EnQueue(3)) // return True
@@ -79,7 +116,7 @@ func main() {
 	fmt.Println(myCircularQueue.IsFull())   // return True
 	fmt.Println(myCircularQueue.DeQueue())  // return True
 	fmt.Println(myCircularQueue.EnQueue(4)) // return True
-	fmt.Println(myCircularQueue.Rear())     // return 4
+	fmt.Println(myCircularQueue.Rear())     // return 4*/
 
 	/*myCircularQueue := Constructor(3)
 	fmt.Println(myCircularQueue.EnQueue(2))
